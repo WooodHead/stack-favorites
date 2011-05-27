@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="http://infinity88.com/stackunderflow/stackunderflow-1.0.3.min.js"></script>
 		
 		<script type="text/javascript">
+			var allFavorites = {};
 			var tags = {};
 			var userID = '340';
 			
@@ -20,7 +21,13 @@
 					getFavoriteQuestions();
 					
 					return false;
-				});			
+				});
+
+				$('#searchForm').submit(function() {
+					performSearch();
+					
+					return false;
+				});				
 			
 				$( "#tabs" ).tabs();
 			
@@ -65,6 +72,7 @@
 					pagesize: '100'
 				},
 				function(data) {
+					allFavorites = data;
 					stackunderflow.render.questions(data, '#allFavorites');
 				
 					$.each(data.questions, function(index, question) {
@@ -88,7 +96,41 @@
 						stackunderflow.render.questions(tagQuestions, '#'+tagName+'_tagContainer');
 					});
 					
+				}
+			);
+		}
+		
+		function performSearch() {
+			var searchInput = $('#searchInput').val();
+			$('#searchResults').html(''); //Reset search results;
+		
+			if(allFavorites.questions) {
+				var searchResults = { 'questions': [] };
+				var patt = RegExp(searchInput,'i');
+				var alreadyFound = {};
+				
+				$.each(allFavorites.questions, function(index, question) {
+					if(!alreadyFound[question.question_id]) {
+						if(question.title.search(patt) != -1) {
+							searchResults.questions.push(question);
+							alreadyFound[question.question_id] = 'found';
+						} else if(question.owner.display_name.search(patt) != -1) {
+							searchResults.questions.push(question);
+							alreadyFound[question.question_id] = 'found';
+						} else {
+							$.each(question.tags, function(index, tag) {
+								if(tag.search(patt) != -1) {
+									searchResults.questions.push(question);
+									alreadyFound[question.question_id] = 'found';
+									return;
+								}
+							});
+						}
+					}
 				});
+			
+				stackunderflow.render.questions(searchResults, '#searchResults');
+			}
 		}
 		
 		</script>
@@ -131,7 +173,14 @@
 				</ul>
 			</div>
 			<div id="tabs-3">
+				<form id="searchForm">
+					<input type="text" id="searchInput" />
+					<input type="submit" value="Search" />
+				</form>
+				<div id="searchResults">
 				
+				</div>
+				<div style="clear: both;"></div>
 			</div>
 		</div>
 		
