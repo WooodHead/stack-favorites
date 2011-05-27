@@ -11,8 +11,20 @@
 		
 		<script type="text/javascript">
 			var tags = {};
+			var userID = '340';
 			
 			$(document).ready(function () {
+				$('#userIDForm').submit(function() {
+					userID = $('#userID').val();
+					
+					//Reset html and tags variable
+					tags = {};
+					$('#folders').html('');
+					
+					getFavoriteQuestions();
+					
+					return false;
+				});			
 			
 				$('.expand').live('click', function(event) {
 					var $expandLink = $(this);
@@ -36,36 +48,40 @@
 			
 				$('#folders').sortable();
 			
-			
-				$.getJSON('http://api.stackoverflow.com/1.1/users/340/favorites?jsonp=?',
-					{
-						pagesize: '100'
-					},
-					function(data) {
-						$.each(data.questions, function(index, question) {
-						
-							$.each(question.tags, function(index, tag) {
-								if(tags[tag]) {
-									tags[tag].questions.push(question);
-								} else {
-									tags[tag] = { "questions": [ question ] };
-								}
-							});
-						
-						});
-						
-						//Show a folder for each tag with the right questions in it
-						$.each(tags, function(tagName, tagQuestions) {
-							var tagContainerHtml = '<li class="ui-widget-content"><span class="folderName">'+tagName+'</span> <a class="expand">+</a><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
-							
-							$('#folders').append(tagContainerHtml);
-							
-							stackunderflow.render.questions(tagQuestions, '#'+tagName+'_tagContainer');
-						});
-						
-					});
+				getFavoriteQuestions();				
 					
 			});
+			
+		function getFavoriteQuestions() {
+			$.getJSON('http://api.stackoverflow.com/1.1/users/'+userID+'/favorites?jsonp=?',
+				{
+					pagesize: '100'
+				},
+				function(data) {
+					$.each(data.questions, function(index, question) {
+					
+						$.each(question.tags, function(index, tag) {
+							if(tags[tag]) {
+								tags[tag].questions.push(question);
+							} else {
+								tags[tag] = { "questions": [ question ] };
+							}
+						});
+					
+					});
+					
+					//Show a folder for each tag with the right questions in it
+					$.each(tags, function(tagName, tagQuestions) {
+						var tagContainerHtml = '<li class="ui-widget-content"><span class="folderName">'+tagName+'</span> <a class="expand">+</a><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+						
+						$('#folders').append(tagContainerHtml);
+						
+						stackunderflow.render.questions(tagQuestions, '#'+tagName+'_tagContainer');
+					});
+					
+				});
+		}
+		
 		</script>
 		
 		<style>
@@ -80,6 +96,11 @@
 		
 	</head>
 	<body>
+		<form id="userIDForm">
+			User ID: <input type="text" id="userID" />
+			<input type="submit" value="Submit" />
+		</form> 
+		
 		<ul id="folders">
 
 		</ul>
