@@ -17,10 +17,6 @@
 				$('#userIDForm').submit(function() {
 					userID = $('#userID').val();
 					
-					//Reset html and tags variable
-					tags = {};
-					$('#folders').html('');
-					
 					getFavoriteQuestions();
 					
 					return false;
@@ -53,6 +49,14 @@
 			});
 			
 		function getFavoriteQuestions() {
+			//Reset html and tags variable
+			tags = {};
+			$('#folders').html('');
+		
+			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
+			$('#userFlair').html(flairHtml);
+			
+				
 			$.getJSON('http://api.stackoverflow.com/1.1/users/'+userID+'/favorites?jsonp=?',
 				{
 					pagesize: '100'
@@ -96,10 +100,15 @@
 		
 	</head>
 	<body>
+	
 		<form id="userIDForm">
 			User ID: <input type="text" id="userID" />
 			<input type="submit" value="Submit" />
 		</form> 
+		
+		<div id="userFlair">
+		
+		</div>
 		
 		<ul id="folders">
 
