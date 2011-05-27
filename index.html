@@ -22,10 +22,12 @@
 					return false;
 				});			
 			
+				$( "#tabs" ).tabs();
+			
 				$('.expand').live('click', function(event) {
 					var $expandLink = $(this);
 					
-					$(this).next().toggle('slow', function() {
+					$(this).next().toggle('fast', function() {
 						
 						if($expandLink.text() == '+') {
 							$expandLink.html('&minus;');
@@ -51,6 +53,7 @@
 		function getFavoriteQuestions() {
 			//Reset html and tags variable
 			tags = {};
+			$('#allFavorites').html('');
 			$('#folders').html('');
 		
 			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
@@ -62,6 +65,8 @@
 					pagesize: '100'
 				},
 				function(data) {
+					stackunderflow.render.questions(data, '#allFavorites');
+				
 					$.each(data.questions, function(index, question) {
 					
 						$.each(question.tags, function(index, tag) {
@@ -110,9 +115,26 @@
 		
 		</div>
 		
-		<ul id="folders">
-
-		</ul>
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">All Favorites</a></li>
+				<li><a href="#tabs-2">Organized into Tags</a></li>
+				<li><a href="#tabs-3">Search</a></li>
+			</ul>
+			<div id="tabs-1">
+				<div id="allFavorites" style="height: auto;"></div>
+				<div style="clear: both;"></div>
+			</div>
+			<div id="tabs-2">
+				<ul id="folders">
+				
+				</ul>
+			</div>
+			<div id="tabs-3">
+				
+			</div>
+		</div>
+		
 	</body>
 </html>
 
