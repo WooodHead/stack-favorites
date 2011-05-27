@@ -2,7 +2,6 @@
 <html>
 	<head>
 	
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>StackOverflow Favorites Organizer</title>
 		<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
 		<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
@@ -16,7 +15,18 @@
 			$(document).ready(function () {
 			
 				$('.expand').live('click', function(event) {
-					$(this).next().toggle('slow');
+					var $expandLink = $(this);
+					
+					$(this).next().toggle('slow', function() {
+						
+						if($expandLink.text() == '+') {
+							$expandLink.html('&minus;');
+							$expandLink.addClass('red');
+						} else {
+							$expandLink.text('+');
+							$expandLink.removeClass('red');
+						}
+					});
 					
 					event.stopPropagation();
 					event.preventDefault();
@@ -46,7 +56,7 @@
 						
 						//Show a folder for each tag with the right questions in it
 						$.each(tags, function(tagName, tagQuestions) {
-							var tagContainerHtml = '<li>'+tagName+' <a class="expand tagContainer" href="">+</a><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+							var tagContainerHtml = '<li class="ui-widget-content"><span class="folderName">'+tagName+'</span> <a class="expand">+</a><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
 							
 							$('#folders').append(tagContainerHtml);
 							
@@ -57,6 +67,16 @@
 					
 			});
 		</script>
+		
+		<style>
+			#folders .ui-selecting { background: #FECA40; }
+			#folders .ui-selected { background: #F39814; color: white; }
+			#folders { list-style-type: none; margin: 0; padding: 0; }
+			#folders li { margin: 3px; padding: 0.4em; }
+			#folders li .folderName { font-size: 1.4em; }
+			#folders li .expand { color: green; }
+			#folders li .red { color: red; }
+		</style>
 		
 	</head>
 	<body>
