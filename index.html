@@ -73,10 +73,12 @@
 					pagesize: '100'
 				},
 				function(data) {
-					allFavorites = data;
-					stackunderflow.render.questions(data, '#allFavorites');
-				
+		
 					$.each(data.questions, function(index, question) {
+						// The text values returned from the api are not encoded with the
+						// HTML entities, so we can have a problem where the text is interpreted
+						// as an HTML tag. So this line encodes the title of the question.
+						question.title = $("<div/>").text(question.title).html();
 					
 						$.each(question.tags, function(index, tag) {
 							if(tags[tag]) {
@@ -87,6 +89,9 @@
 						});
 					
 					});
+
+					allFavorites = data;
+					stackunderflow.render.questions(data, '#allFavorites');
 					
 					//Show a folder for each tag with the right questions in it
 					$.each(tags, function(tagName, tagQuestions) {
