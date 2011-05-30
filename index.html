@@ -24,17 +24,7 @@
 				});
 
 				$('#searchForm').submit(function() {
-					try
-					{
-						performSearch();
-					}
-					catch(err)
-					{
-						txt="There was an error on this page.\n\n";
-						txt+="Error description: " + err.description + "\n\n";
-						txt+="Click OK to continue.\n\n";
-						alert(txt);
-					}
+					performSearch();
 					
 					return false;
 				});				
