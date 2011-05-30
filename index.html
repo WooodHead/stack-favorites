@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 			var allFavorites = {};
 			var tags = {};
-			var userID = '340';
+			var userID;
 			
 			$(document).ready(function () {
 				$('#userIDForm').submit(function() {
@@ -24,7 +24,17 @@
 				});
 
 				$('#searchForm').submit(function() {
-					performSearch();
+					try
+					{
+						performSearch();
+					}
+					catch(err)
+					{
+						txt="There was an error on this page.\n\n";
+						txt+="Error description: " + err.description + "\n\n";
+						txt+="Click OK to continue.\n\n";
+						alert(txt);
+					}
 					
 					return false;
 				});				
@@ -52,16 +62,17 @@
 				$('.questionContent').hide();
 			
 				$('#folders').sortable();
-			
-				getFavoriteQuestions();				
-					
+				
 			});
 			
 		function getFavoriteQuestions() {
-			//Reset html and tags variable
+			//Reset various elements on the page
+			allFavorites = {};
 			tags = {};
 			$('#allFavorites').html('');
 			$('#folders').html('');
+			$('#searchResults').html('');
+			$('#userFlair').html('');
 		
 			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
 			$('#userFlair').html(flairHtml);
@@ -114,7 +125,7 @@
 						if(question.title.search(patt) != -1) {
 							searchResults.questions.push(question);
 							alreadyFound[question.question_id] = 'found';
-						} else if(question.owner.display_name.search(patt) != -1) {
+						} else if(question.owner && question.owner.display_name.search(patt) != -1) {
 							searchResults.questions.push(question);
 							alreadyFound[question.question_id] = 'found';
 						} else {
@@ -143,19 +154,24 @@
 			#folders li .folderName { font-size: 1.4em; }
 			#folders li .expand { color: green; }
 			#folders li .red { color: red; }
+			#userIDForm { padding-top: 5px; }
+			#userFlair { margin-left: 10px; }
 		</style>
 		
 	</head>
 	<body>
+		<img src="title.png" alt="StackOverflow Favorites Organizer"/>
 	
-		<form id="userIDForm">
-			User ID: <input type="text" id="userID" />
-			<input type="submit" value="Submit" />
-		</form> 
+		<form id="userIDForm" class ="ui-widget">
+			<span style="position: relative; top: -8px;">
+				User ID: <input type="text" id="userID" />
+				<input type="submit" value="Submit" />
+			</span>
+			
+			<span id="userFlair">
 		
-		<div id="userFlair">
-		
-		</div>
+			</span>
+		</form> 		
 		
 		<div id="tabs">
 			<ul>
