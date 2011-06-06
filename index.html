@@ -31,8 +31,8 @@
 			
 				$( "#tabs" ).tabs();
 			
-				$('.expand').live('click', function(event) {
-					var $expandLink = $(this);
+				$('.folderBar').live('click', function(event) {
+					var $expandLink = $(this).children('.expand');
 					
 					$(this).next().toggle('fast', function() {
 						
@@ -96,7 +96,7 @@
 					
 					//Show a folder for each tag with the right questions in it
 					$.each(tags, function(tagName, tagQuestions) {
-						var tagContainerHtml = '<li class="ui-widget-content"><span class="folderName">'+tagName+'</span> <a class="expand">+</a><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+						var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
 						
 						$('#folders').append(tagContainerHtml);
 						
