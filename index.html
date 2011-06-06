@@ -138,6 +138,11 @@
 			
 				stackunderflow.render.questions(searchResults, '#searchResults');
 			}
+			
+			if($('#searchResults').html() == '') {
+				$('<div>No results found.</div>').hide().appendTo('#searchResults').show('slow');
+				//$('#searchResults').html('<br/>No results found.');
+			}
 		}
 		
 		</script>
