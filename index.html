@@ -13,12 +13,13 @@
 			var allFavorites = {};
 			var tags = {};
 			var userID;
+			var sortType = 'activity';
 			
 			$(document).ready(function () {
 				$('#userIDForm').submit(function() {
 					userID = $('#userID').val();
 					
-					getFavoriteQuestions();
+					getFavoriteQuestions(true);
 					
 					return false;
 				});
@@ -27,9 +28,19 @@
 					performSearch();
 					
 					return false;
-				});				
+				});
+				
+				$('#tabs-favorite-user a').click(function() {
+					sortType = $(this).attr("href");
+					
+					if(userID) {
+						getFavoriteQuestions(false);
+					}
+					
+					return false;
+				});
 			
-				$( "#tabs" ).tabs();
+				$('#tabs').tabs();
 			
 				$('.folderBar').live('click', function(event) {
 					var $expandLink = $(this).children('.expand');
@@ -55,13 +66,15 @@
 				
 			});
 			
-		function getFavoriteQuestions() {
+		function getFavoriteQuestions(isNewUser) {
 			//Reset various elements on the page
 			allFavorites = {};
 			tags = {};
 			$('#allFavorites').html('');
 			$('#folders').html('');
-			$('#searchResults').html('');
+			if(isNewUser) {
+				$('#searchResults').html('');
+			}
 			$('#userFlair').html('');
 		
 			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
@@ -71,7 +84,8 @@
 			$.getJSON('http://api.stackoverflow.com/1.1/users/'+userID+'/favorites?jsonp=?',
 				{
 					pagesize: '100',
-					key: 'XzasijCTE0eekRsIcSVErw'
+					key: 'XzasijCTE0eekRsIcSVErw',
+					sort: sortType
 				},
 				function(data) {
 		
@@ -96,13 +110,17 @@
 					
 					//Show a folder for each tag with the right questions in it
 					$.each(tags, function(tagName, tagQuestions) {
-						var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+						var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+
+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
 						
 						$('#folders').append(tagContainerHtml);
 						
 						stackunderflow.render.questions(tagQuestions, '#'+tagName+'_tagContainer');
 					});
-					
+				
+					if(!isNewUser && $('#searchResults .se-question-summary').length > 0) {
+						performSearch();
+					}
 				}
 			);
 		}
@@ -181,6 +199,13 @@
 				<li><a href="#tabs-3">Search</a></li>
 			</ul>
 			<div id="tabs-1">
+				<div id="tabs-favorite-user" class="subtabs">
+					<a href="votes" title="sort by highest votes">votes</a>
+					<a href="creation" title="sort by creation date">newest</a>
+					<a class="youarehere" href="views" title="sort by most viewed">views</a>
+					<a href="activity" title="sort by recent activity">recent</a>
+					<a href="added" title="sort by date added to favorites">added</a>
+				</div>
 				<div id="allFavorites" style="height: auto;"></div>
 				<div style="clear: both;"></div>
 			</div>
@@ -194,6 +219,13 @@
 					<input type="text" id="searchInput" />
 					<input type="submit" value="Search" />
 				</form>
+				<div id="tabs-favorite-user" class="subtabs">
+					<a href="votes" title="sort by highest votes">votes</a>
+					<a href="creation" title="sort by creation date">newest</a>
+					<a class="youarehere" href="views" title="sort by most viewed">views</a>
+					<a href="activity" title="sort by recent activity">recent</a>
+					<a href="added" title="sort by date added to favorites">added</a>
+				</div>
 				<div id="searchResults">
 				
 				</div>
