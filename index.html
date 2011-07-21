@@ -31,10 +31,16 @@
 				});
 				
 				$('#tabs-favorite-user a').click(function() {
-					sortType = $(this).attr("href");
+					tempSortType = $(this).attr("href");
 					
-					if(userID) {
-						getFavoriteQuestions(false);
+					if(sortType != tempSortType) {
+						$('.youarehere').removeClass('youarehere');
+						$('#tabs-favorite-user a[href="'+ tempSortType +'"]').addClass('youarehere');
+						sortType = tempSortType;
+						
+						if(userID) {
+							getFavoriteQuestions(false);
+						}
 					}
 					
 					return false;
@@ -175,6 +181,26 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 			#folders li .red { color: red; }
 			#userIDForm { margin-left: 20px; padding-top: 5px; }
 			#userFlair { margin-left:60px; }
+			.subtabs a {
+				border: 1px solid #CCCCCC;
+				color: #808185;
+				display: block;
+				float: left;
+				font-family: Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;
+				font-size: 120%;
+				margin-right: 3px;
+				padding: 2px 4px 4px;
+				text-decoration: none;
+			}
+			.subtabs a.youarehere {
+				background-color: #808185;
+				border: 1px solid #808185;
+				color: #FFFFFF;
+				font-weight: bold;
+			}
+			#tabs-3 #tabs-favorite-user {
+				margin-top: 10px;
+			}
 		</style>
 		
 	</head>
@@ -199,13 +225,14 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 				<li><a href="#tabs-3">Search</a></li>
 			</ul>
 			<div id="tabs-1">
-				<div id="tabs-favorite-user" class="subtabs">
+				<div id="tabs-favorite-user" class="subtabs" >
 					<a href="votes" title="sort by highest votes">votes</a>
 					<a href="creation" title="sort by creation date">newest</a>
-					<a class="youarehere" href="views" title="sort by most viewed">views</a>
-					<a href="activity" title="sort by recent activity">recent</a>
+					<a href="views" title="sort by most viewed">views</a>
+					<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
 					<a href="added" title="sort by date added to favorites">added</a>
 				</div>
+				<div style="clear: both;"></div>
 				<div id="allFavorites" style="height: auto;"></div>
 				<div style="clear: both;"></div>
 			</div>
@@ -222,10 +249,11 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 				<div id="tabs-favorite-user" class="subtabs">
 					<a href="votes" title="sort by highest votes">votes</a>
 					<a href="creation" title="sort by creation date">newest</a>
-					<a class="youarehere" href="views" title="sort by most viewed">views</a>
-					<a href="activity" title="sort by recent activity">recent</a>
+					<a href="views" title="sort by most viewed">views</a>
+					<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
 					<a href="added" title="sort by date added to favorites">added</a>
 				</div>
+				<div style="clear: both;"></div>
 				<div id="searchResults">
 				
 				</div>
