@@ -78,17 +78,21 @@
 			tags = {};
 			$('#allFavorites').html('');
 			$('#folders').html('');
-			if(isNewUser) {
-				$('#searchResults').html('');
-			}
+			$('#searchResults').html('');
 			$('#userFlair').html('');
 		
 			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
 			$('#userFlair').html(flairHtml);
 			
-				
+			$(".loading").show();
+			
+			getFavoriteQuestionsByPage(isNewUser, 1);
+		}
+		
+		function getFavoriteQuestionsByPage(isNewUser, pageNumber) {
 			$.getJSON('http://api.stackoverflow.com/1.1/users/'+userID+'/favorites?jsonp=?',
 				{
+					page: pageNumber,
 					pagesize: '100',
 					key: 'XzasijCTE0eekRsIcSVErw',
 					sort: sortType
@@ -111,24 +115,43 @@
 					
 					});
 
-					allFavorites = data;
-					stackunderflow.render.questions(data, '#allFavorites');
+					if(pageNumber > 1) {
+						allFavorites.questions = allFavorites.questions.concat(data.questions);
+					} else {
+						allFavorites = data;
+					}
 					
-					//Show a folder for each tag with the right questions in it
-					$.each(tags, function(tagName, tagQuestions) {
-						var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+
-tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
-						
-						$('#folders').append(tagContainerHtml);
-						
-						stackunderflow.render.questions(tagQuestions, '#'+tagName+'_tagContainer');
-					});
-				
-					if(!isNewUser && $('#searchResults .se-question-summary').length > 0) {
-						performSearch();
+					if((100*pageNumber) >= data.total) {
+						displayFavoriteQuestions(isNewUser);
+					} else {
+						getFavoriteQuestionsByPage(isNewUser, pageNumber+1);
 					}
 				}
 			);
+		}
+		
+		function displayFavoriteQuestions(isNewUser) {
+			stackunderflow.render.questions(allFavorites, '#allFavorites');
+					
+			//Show a folder for each tag with the right questions in it
+			//$.each(tags, function(tagName, tagQuestions) {
+			for(var tagName in tags) {
+				if(tags.hasOwnProperty(tagName)) {
+					var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+							
+					$('#folders').append(tagContainerHtml);
+							
+					stackunderflow.render.questions(tags[tagName], '#'+tagName+'_tagContainer');
+				}
+			}
+				
+			if(!isNewUser) {
+				performSearch();
+			} else if ($('#searchInput').val().length > 0) {
+				performSearch();
+			}			
+			
+			$(".loading").hide();
 		}
 		
 		function performSearch() {
@@ -201,6 +224,7 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 			#tabs-3 #tabs-favorite-user {
 				margin-top: 10px;
 			}
+			.loading { display:none; }
 		</style>
 		
 	</head>
@@ -233,10 +257,16 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 					<a href="added" title="sort by date added to favorites">added</a>
 				</div>
 				<div style="clear: both;"></div>
+				<div class="loading">
+					<p><img src="loader.gif" /></p>
+				</div>
 				<div id="allFavorites" style="height: auto;"></div>
 				<div style="clear: both;"></div>
 			</div>
 			<div id="tabs-2">
+				<div class="loading">
+					<p><img src="loader.gif" /></p>
+				</div>
 				<ul id="folders">
 				
 				</ul>
@@ -254,6 +284,9 @@ tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div st
 					<a href="added" title="sort by date added to favorites">added</a>
 				</div>
 				<div style="clear: both;"></div>
+				<div class="loading">
+					<p><img src="loader.gif" /></p>
+				</div>
 				<div id="searchResults">
 				
 				</div>
