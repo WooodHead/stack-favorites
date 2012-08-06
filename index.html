@@ -106,7 +106,7 @@
 						question.title = $("<div/>").text(question.title).html();
 					
 						$.each(question.tags, function(index, tag) {
-							if(tags[tag]) {
+							if(tags.hasOwnProperty(tag)) {
 								tags[tag].questions.push(question);
 							} else {
 								tags[tag] = { "questions": [ question ] };
