@@ -254,7 +254,7 @@ var su = window.stackunderflow = {
         question: '<div class="se-question-summary" id="question-summary-{question_id}"> \
     <div onclick="window.location.href=\'{link}\'" class="se-cp"> \
         <div class="se-votes"> \
-            <div class="se-mini-counts">{score}</div> \
+            <div class="se-mini-counts">{formatnumber:score}</div> \
             <div>votes</div> \
         </div> \
         <div class="se-status {acceptedclass:=}"> \

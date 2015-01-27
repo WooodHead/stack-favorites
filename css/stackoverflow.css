@@ -49,8 +49,6 @@ within an element with the '.se-question-summary' class.
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 110%;
     font-weight: bold;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 .se-question-summary .se-mini-counts {
@@ -69,7 +67,8 @@ within an element with the '.se-question-summary' class.
     text-decoration: none;
 }
 .se-question-summary .se-question-hyperlink {
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: normal;
 }
 .question-summary {
     border-bottom: 1px dotted #999;
@@ -91,11 +90,12 @@ within an element with the '.se-question-summary' class.
 .se-question-summary .se-views {
     color: #999;
     text-align: center;
-    width: 50px;
+    width: 40px;
     height: 38px;
     float: left;
     margin: 0 7px 0 0;
-    padding: 5px 0 5px 4px;
+    padding: 5px 5px 6px 5px;
+    font-size: 11px;
 }
 .se-question-summary .se-views strong {
     display: block;
@@ -114,13 +114,13 @@ within an element with the '.se-question-summary' class.
 }
 
 .se-question-summary .se-status {
-    padding: 4px 0 4px;
     text-align: center;
     float: left;
     margin: 0 3px 0 0;
-    padding: 5px;
-    width: 48px;
-    height: 38px;
+    padding: 6px;
+    height: auto;
+    width: 44px;
+    font-size: 11px;
 }
 .se-question-summary .se-status strong {
     color: #fff;
@@ -148,6 +148,9 @@ within an element with the '.se-question-summary' class.
 }
 .se-question-summary .se-summary h3 {
     font-size: 130%;
+    margin-bottom: .35em;
+    margin-top: 0px;
+    line-height: 1.3;
 }
 .se-question-summary .se-summary {
     width: 550px;
