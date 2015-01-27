@@ -90,11 +90,12 @@
 		}
 		
 		function getFavoriteQuestionsByPage(isNewUser, pageNumber) {
-			$.getJSON('http://api.stackoverflow.com/1.1/users/'+userID+'/favorites?jsonp=?',
+			$.getJSON('http://api.stackexchange.com/2.2/users/'+userID+'/favorites?jsonp=?',
 				{
 					page: pageNumber,
 					pagesize: '100',
 					key: 'XzasijCTE0eekRsIcSVErw',
+					site: 'stackoverflow',
 					sort: sortType
 				},
 				function(data) {
