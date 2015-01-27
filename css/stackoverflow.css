@@ -31,7 +31,7 @@ within an element with the '.se-question-summary' class.
     text-decoration: underline;
 }
 .se-question-summary a:visited {
-    color: #4A6B82;
+    color: #0c65a5;
 }
 .se-question-summary h1 {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -57,13 +57,12 @@ within an element with the '.se-question-summary' class.
     font-weight: 300;
 }
 .se-question-summary .se-reputation-score {
-    font-weight: bold;
-    color: #444;
-    font-size: 120%;
+    font-weight: normal;
+    color: #777;
+    font-size: 100%;
     margin-right: 2px;
 }
 .se-question-summary .se-relativetime {
-    font-weight: bold;
     text-decoration: none;
 }
 .se-question-summary .se-question-hyperlink {
@@ -169,6 +168,7 @@ within an element with the '.se-question-summary' class.
     line-height: inherit;
     padding-top: 4px;
     white-space: nowrap;
+    font-size: 12px;
 }
 .se-question-summary .se-started img {
     vertical-align: baseline;
@@ -177,23 +177,30 @@ within an element with the '.se-question-summary' class.
     margin-left: 1px;
 }
 .se-question-summary .se-post-tag {
-    color: #3E6D8E;
-    background-color: #E0EAF1;
-    border-bottom: 1px solid #3E6D8E;
-    border-right: 1px solid #7F9FB6;
+    color: #566e76;
+    background: #f7fdff;
+    border: 1px solid #c0d4db;
+    padding: .1em .8em;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 11px;
+    color: #3e6d8e;
+    background-color: #e4edf4;
+    padding: .25em .5em;
     margin: 2px 2px 2px 0;
-    padding: 3px 4px 3px 4px;
     text-decoration: none;
-    font-size: 90%;
-    line-height: 2.4;
+    font-size: 12px;
+    line-height: 1.4;
     white-space: nowrap;
+    display: inline-block;
+    border-radius: 0;
+    border: 1px solid #e4edf4;
 }
 .se-question-summary .se-post-tag:hover {
-    background-color: #3E6D8E;
-    color: #E0EAF1;
-    border-bottom: 1px solid #37607D;
-    border-right: 1px solid #37607D;
     text-decoration: none;
+    color: #3e6d8e;
+    background-color: #dae6ef;
+    border: 1px solid #dae6ef;
 }
 .se-question-summary .se-cp {
     cursor: pointer;
