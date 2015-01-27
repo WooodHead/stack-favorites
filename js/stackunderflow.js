@@ -246,9 +246,9 @@ var su = window.stackunderflow = {
     templates: {
         tag: '<a href="{site}/questions/tagged/{=}" class="se-post-tag" title="show questions tagged \'{=}\'" rel="tag">{=}</a> ',
         question: '<div class="se-question-summary" id="question-summary-{question_id}"> \
-    <div onclick="window.location.href=\'{site}{question_answers_url}\'" class="se-cp"> \
+    <div onclick="window.location.href=\'{link}\'" class="se-cp"> \
         <div class="se-votes"> \
-            <div class="se-mini-counts">{up_vote_count}</div> \
+            <div class="se-mini-counts">{score}</div> \
             <div>votes</div> \
         </div> \
         <div class="se-status {acceptedclass:=}"> \
@@ -261,7 +261,7 @@ var su = window.stackunderflow = {
         </div> \
     </div> \
     <div class="se-summary"> \
-        <h3><a href="{site}{question_answers_url}" class="se-question-hyperlink" title="{title}">{title}</a></h3> \
+        <h3><a href="{link}" class="se-question-hyperlink" title="{title}">{title}</a></h3> \
         <div class="se-tags"> \
             {template-tag:tags}\
         </div> \

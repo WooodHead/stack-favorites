@@ -94,13 +94,13 @@
 				{
 					page: pageNumber,
 					pagesize: '100',
-					key: 'XzasijCTE0eekRsIcSVErw',
+					key: 'VmwTs8j5UsYC0un6bZIbRg((',
 					site: 'stackoverflow',
 					sort: sortType
 				},
 				function(data) {
 		
-					$.each(data.questions, function(index, question) {
+					$.each(data.items, function(index, question) {
 						// The text values returned from the api are not encoded with the
 						// HTML entities, so we can have a problem where the text is interpreted
 						// as an HTML tag. So this line encodes the title of the question.
@@ -117,12 +117,12 @@
 					});
 
 					if(pageNumber > 1) {
-						allFavorites.questions = allFavorites.questions.concat(data.questions);
+						allFavorites.questions = allFavorites.questions.concat(data.items);
 					} else {
-						allFavorites = data;
+						allFavorites.questions = data.items;
 					}
 					
-					if((100*pageNumber) >= data.total) {
+					if(!data.has_more) {
 						displayFavoriteQuestions(isNewUser);
 					} else {
 						getFavoriteQuestionsByPage(isNewUser, pageNumber+1);
