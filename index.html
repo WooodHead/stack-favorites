@@ -3,9 +3,9 @@
 	<head>
 	
 		<title>StackOverflow Favorites Organizer</title>
-		<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />	
-		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
+		<link type="text/css" href="jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet" />	
+		<script type="text/javascript" src="jquery-ui-1.11.2/external/jquery/jquery.js"></script>
+		<script type="text/javascript" src="jquery-ui-1.11.2/jquery-ui.js"></script>
 		<link type="text/css" rel="Stylesheet" href="css/stackoverflow.css" />
 		<script type="text/javascript" src="js/stackunderflow.js"></script>
 		
@@ -48,7 +48,8 @@
 			
 				$('#tabs').tabs();
 			
-				$('.folderBar').live('click', function(event) {
+				//$('.folderBar').live('click', function(event) {
+				$( document ).on( "click", ".folderBar", function(event) {
 					var $expandLink = $(this).children('.expand');
 					
 					$(this).next().toggle('fast', function() {
@@ -72,130 +73,130 @@
 				
 			});
 			
-		function getFavoriteQuestions(isNewUser) {
-			//Reset various elements on the page
-			allFavorites = {};
-			tags = {};
-			$('#allFavorites').html('');
-			$('#folders').html('');
-			$('#searchResults').html('');
-			$('#userFlair').html('');
-		
-			var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
-			$('#userFlair').html(flairHtml);
+			function getFavoriteQuestions(isNewUser) {
+				//Reset various elements on the page
+				allFavorites = {};
+				tags = {};
+				$('#allFavorites').html('');
+				$('#folders').html('');
+				$('#searchResults').html('');
+				$('#userFlair').html('');
 			
-			$(".loading").show();
-			
-			getFavoriteQuestionsByPage(isNewUser, 1);
-		}
-		
-		function getFavoriteQuestionsByPage(isNewUser, pageNumber) {
-			$.getJSON('http://api.stackexchange.com/2.2/users/'+userID+'/favorites?jsonp=?',
-				{
-					page: pageNumber,
-					pagesize: '100',
-					key: 'VmwTs8j5UsYC0un6bZIbRg((',
-					site: 'stackoverflow',
-					sort: sortType
-				},
-				function(data) {
-		
-					$.each(data.items, function(index, question) {
-						// The text values returned from the api are not encoded with the
-						// HTML entities, so we can have a problem where the text is interpreted
-						// as an HTML tag. So this line encodes the title of the question.
-						question.title = $("<div/>").text(question.title).html();
-					
-						$.each(question.tags, function(index, tag) {
-							if(tags.hasOwnProperty(tag)) {
-								tags[tag].questions.push(question);
-							} else {
-								tags[tag] = { "questions": [ question ] };
-							}
-						});
-					
-					});
-
-					if(pageNumber > 1) {
-						allFavorites.questions = allFavorites.questions.concat(data.items);
-					} else {
-						allFavorites.questions = data.items;
-					}
-					
-					if(!data.has_more) {
-						displayFavoriteQuestions(isNewUser);
-					} else {
-						getFavoriteQuestionsByPage(isNewUser, pageNumber+1);
-					}
-				}
-			);
-		}
-		
-		function displayFavoriteQuestions(isNewUser) {
-			stackunderflow.render.questions(allFavorites, '#allFavorites');
-					
-			//Show a folder for each tag with the right questions in it
-			//$.each(tags, function(tagName, tagQuestions) {
-			for(var tagName in tags) {
-				if(tags.hasOwnProperty(tagName)) {
-					var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
-							
-					$('#folders').append(tagContainerHtml);
-							
-					stackunderflow.render.questions(tags[tagName], '#'+tagName+'_tagContainer');
-				}
+				var flairHtml = '<a href="http://stackoverflow.com/users/'+userID+'/"><img src="http://stackoverflow.com/users/flair/'+userID+'.png"></a>';
+				$('#userFlair').html(flairHtml);
+				
+				$(".loading").show();
+				
+				getFavoriteQuestionsByPage(isNewUser, 1);
 			}
-				
-			if(!isNewUser) {
-				performSearch();
-			} else if ($('#searchInput').val().length > 0) {
-				performSearch();
-			}			
 			
-			$(".loading").hide();
-		}
-		
-		function performSearch() {
-			var searchInput = $('#searchInput').val();
-			$('#searchResults').html(''); //Reset search results;
-		
-			if(allFavorites.questions) {
-				var searchResults = { 'questions': [] };
-				var patt = RegExp(searchInput,'i');
-				var alreadyFound = {};
-				
-				$.each(allFavorites.questions, function(index, question) {
-					if(!alreadyFound[question.question_id]) {
-						if(question.title.search(patt) != -1) {
-							searchResults.questions.push(question);
-							alreadyFound[question.question_id] = 'found';
-						} else if(question.owner && question.owner.display_name.search(patt) != -1) {
-							searchResults.questions.push(question);
-							alreadyFound[question.question_id] = 'found';
-						} else {
+			function getFavoriteQuestionsByPage(isNewUser, pageNumber) {
+				$.getJSON('http://api.stackexchange.com/2.2/users/'+userID+'/favorites?jsonp=?',
+					{
+						page: pageNumber,
+						pagesize: '100',
+						key: 'VmwTs8j5UsYC0un6bZIbRg((',
+						site: 'stackoverflow',
+						sort: sortType
+					},
+					function(data) {
+			
+						$.each(data.items, function(index, question) {
+							// The text values returned from the api are not encoded with the
+							// HTML entities, so we can have a problem where the text is interpreted
+							// as an HTML tag. So this line encodes the title of the question.
+							question.title = $("<div/>").text(question.title).html();
+						
 							$.each(question.tags, function(index, tag) {
-								if(tag.search(patt) != -1) {
-									searchResults.questions.push(question);
-									alreadyFound[question.question_id] = 'found';
-									return;
+								if(tags.hasOwnProperty(tag)) {
+									tags[tag].questions.push(question);
+								} else {
+									tags[tag] = { "questions": [ question ] };
 								}
 							});
+						
+						});
+
+						if(pageNumber > 1) {
+							allFavorites.questions = allFavorites.questions.concat(data.items);
+						} else {
+							allFavorites.questions = data.items;
+						}
+						
+						if(!data.has_more) {
+							displayFavoriteQuestions(isNewUser);
+						} else {
+							getFavoriteQuestionsByPage(isNewUser, pageNumber+1);
 						}
 					}
-				});
-			
-				stackunderflow.render.questions(searchResults, '#searchResults');
+				);
 			}
 			
-			if($('#searchResults').html() == '') {
-				$('<div>No results found.</div>').hide().appendTo('#searchResults').show('slow');
-				//$('#searchResults').html('<br/>No results found.');
+			function displayFavoriteQuestions(isNewUser) {
+				stackunderflow.render.questions(allFavorites, '#allFavorites');
+						
+				//Show a folder for each tag with the right questions in it
+				//$.each(tags, function(tagName, tagQuestions) {
+				for(var tagName in tags) {
+					if(tags.hasOwnProperty(tagName)) {
+						var tagContainerHtml = '<li class="ui-widget-content"><div class="folderBar"><span class="folderName">'+tagName+'</span> <a class="expand">+</a></div><div id="'+tagName+'_tagContainer"class="tagQuestions" style="display: none;"></div><div style="clear:both;"></div></li>';
+								
+						$('#folders').append(tagContainerHtml);
+								
+						stackunderflow.render.questions(tags[tagName], '#'+tagName+'_tagContainer');
+					}
+				}
+					
+				if(!isNewUser) {
+					performSearch();
+				} else if ($('#searchInput').val().length > 0) {
+					performSearch();
+				}			
+				
+				$(".loading").hide();
 			}
-		}
-		
+			
+			function performSearch() {
+				var searchInput = $('#searchInput').val();
+				$('#searchResults').html(''); //Reset search results;
+			
+				if(allFavorites.questions) {
+					var searchResults = { 'questions': [] };
+					var patt = RegExp(searchInput,'i');
+					var alreadyFound = {};
+					
+					$.each(allFavorites.questions, function(index, question) {
+						if(!alreadyFound[question.question_id]) {
+							if(question.title.search(patt) != -1) {
+								searchResults.questions.push(question);
+								alreadyFound[question.question_id] = 'found';
+							} else if(question.owner && question.owner.display_name.search(patt) != -1) {
+								searchResults.questions.push(question);
+								alreadyFound[question.question_id] = 'found';
+							} else {
+								$.each(question.tags, function(index, tag) {
+									if(tag.search(patt) != -1) {
+										searchResults.questions.push(question);
+										alreadyFound[question.question_id] = 'found';
+										return;
+									}
+								});
+							}
+						}
+					});
+				
+					stackunderflow.render.questions(searchResults, '#searchResults');
+				}
+				
+				if($('#searchResults').html() == '') {
+					$('<div>No results found.</div>').hide().appendTo('#searchResults').show('slow');
+					//$('#searchResults').html('<br/>No results found.');
+				}
+			}
 		</script>
 		
 		<style>
+
 			#folders .ui-selecting { background: #FECA40; }
 			#folders .ui-selected { background: #F39814; color: white; }
 			#folders { list-style-type: none; margin: 0; padding: 0; }
@@ -234,71 +235,72 @@
 		
 	</head>
 	<body>
-		<img src="title.png" alt="StackOverflow Favorites Organizer"/>
-	
-		<form id="userIDForm" class ="ui-widget">
-			<span style="position: relative; top: -8px;">
-				User ID: <input type="text" id="userID" />
-				<input type="submit" value="Submit" />
-			</span>
+		<div id="mainContent">
+			<img src="title.png" alt="StackOverflow Favorites Organizer"/>
+		
+			<form id="userIDForm" class ="ui-widget">
+				<span style="position: relative; top: -8px;">
+					User ID: <input type="text" id="userID" />
+					<input type="submit" value="Submit" />
+				</span>
+				
+				<span id="userFlair">
 			
-			<span id="userFlair">
-		
-			</span>
-		</form> 		
-		
-		<div id="tabs">
-			<ul>
-				<li><a href="#tabs-1">All Favorites</a></li>
-				<li><a href="#tabs-2">Organized into Tags</a></li>
-				<li><a href="#tabs-3">Search</a></li>
-			</ul>
-			<div id="tabs-1">
-				<div id="tabs-favorite-user" class="subtabs" >
-					<a href="votes" title="sort by highest votes">votes</a>
-					<a href="creation" title="sort by creation date">newest</a>
-					<a href="views" title="sort by most viewed">views</a>
-					<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
-					<a href="added" title="sort by date added to favorites">added</a>
-				</div>
-				<div style="clear: both;"></div>
-				<div class="loading">
-					<p><img src="loader.gif" /></p>
-				</div>
-				<div id="allFavorites" style="height: auto;"></div>
-				<div style="clear: both;"></div>
-			</div>
-			<div id="tabs-2">
-				<div class="loading">
-					<p><img src="loader.gif" /></p>
-				</div>
-				<ul id="folders">
-				
+				</span>
+			</form> 		
+			
+			<div id="tabs">
+				<ul>
+					<li><a href="#tabs-1">All Favorites</a></li>
+					<li><a href="#tabs-2">Organized into Tags</a></li>
+					<li><a href="#tabs-3">Search</a></li>
 				</ul>
-			</div>
-			<div id="tabs-3">
-				<form id="searchForm">
-					<input type="text" id="searchInput" />
-					<input type="submit" value="Search" />
-				</form>
-				<div id="tabs-favorite-user" class="subtabs">
-					<a href="votes" title="sort by highest votes">votes</a>
-					<a href="creation" title="sort by creation date">newest</a>
-					<a href="views" title="sort by most viewed">views</a>
-					<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
-					<a href="added" title="sort by date added to favorites">added</a>
+				<div id="tabs-1">
+					<div id="tabs-favorite-user" class="subtabs" >
+						<a href="votes" title="sort by highest votes">votes</a>
+						<a href="creation" title="sort by creation date">newest</a>
+						<a href="views" title="sort by most viewed">views</a>
+						<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
+						<a href="added" title="sort by date added to favorites">added</a>
+					</div>
+					<div style="clear: both;"></div>
+					<div class="loading">
+						<p><img src="loader.gif" /></p>
+					</div>
+					<div id="allFavorites" style="height: auto;"></div>
+					<div style="clear: both;"></div>
 				</div>
-				<div style="clear: both;"></div>
-				<div class="loading">
-					<p><img src="loader.gif" /></p>
+				<div id="tabs-2">
+					<div class="loading">
+						<p><img src="loader.gif" /></p>
+					</div>
+					<ul id="folders">
+					
+					</ul>
 				</div>
-				<div id="searchResults">
-				
+				<div id="tabs-3">
+					<form id="searchForm">
+						<input type="text" id="searchInput" />
+						<input type="submit" value="Search" />
+					</form>
+					<div id="tabs-favorite-user" class="subtabs">
+						<a href="votes" title="sort by highest votes">votes</a>
+						<a href="creation" title="sort by creation date">newest</a>
+						<a href="views" title="sort by most viewed">views</a>
+						<a class="youarehere" href="activity" title="sort by recent activity">recent</a>
+						<a href="added" title="sort by date added to favorites">added</a>
+					</div>
+					<div style="clear: both;"></div>
+					<div class="loading">
+						<p><img src="loader.gif" /></p>
+					</div>
+					<div id="searchResults">
+					
+					</div>
+					<div style="clear: both;"></div>
 				</div>
-				<div style="clear: both;"></div>
 			</div>
 		</div>
-		
 	</body>
 </html>
 

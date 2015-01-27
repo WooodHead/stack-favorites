@@ -15,11 +15,11 @@ within an element with the '.se-question-summary' class.
     padding: 6px 0px;
     width: 730px;
     /* from .container */    
-    margin: 0 auto;
+    margin: 10px;
     text-align: left;
     zoom: 1;
     /* from #mainbar */
-    float: left;
+    display: inline-block;
 }
 
 .se-question-summary a {
@@ -49,6 +49,7 @@ within an element with the '.se-question-summary' class.
     font-family: Trebuchet MS, Liberation Sans, DejaVu Sans, sans-serif;
     font-size: 110%;
     font-weight: bold;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 
