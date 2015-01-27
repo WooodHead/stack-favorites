@@ -17,6 +17,12 @@ var google = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&callback
     // those listening for the loaded event
     callbacks = [];
 
+// Helper function
+function precise_round(num, decimals) {
+    var t=Math.pow(10, decimals);   
+        return (Math.round((num * t) + (decimals>0?1:0)*(Math.sign(num) * (10 / Math.pow(100, decimals)))) / t).toFixed(decimals);
+}
+
 function domLoaded() {
     // based on the proven method of simulating DOMContentLoaded in IE
     if (window.addEventListener) {
@@ -256,8 +262,8 @@ var su = window.stackunderflow = {
             <div>answer</div> \
         </div> \
         <div class="se-views {viewcountcolor:view_count}"> \
-            <div class="se-mini-counts">{viewcountnumber:view_count}</div> \
-            <div>{viewcountk:view_count}views</div> \
+            <div class="se-mini-counts">{formatnumber:view_count}</div> \
+            <div>views</div> \
         </div> \
     </div> \
     <div class="se-summary"> \
@@ -291,11 +297,33 @@ var su = window.stackunderflow = {
             return value.accepted_answer_id ? "se-answered-accepted" :
                 (value.answer_count ? "se-answered" : "se-unanswered");
         },
-        viewcountnumber: function(value) {
-            return value > 999 ? Math.round(value/1000) : value;
-        },
-        viewcountk: function(value) {
-            return value > 999 ? "k" : "";
+        formatnumber: function(value) {
+            var count = 0;
+            while(value.toFixed().length >= 4) {
+                // Protection against infinite loops
+                if(count > 100) {
+                    break;
+                }
+
+                value /= 1000;
+                count++;
+            }
+
+            var result;
+
+            if(count > 0) {
+                value = Math.floor(value);
+
+                if(count === 1) {
+                    result = value + 'k';
+                } else if(count === 2) {
+                    result = value + 'm';
+                }
+            } else {
+                result = value;
+            }
+
+            return result;
         },
         viewcountcolor: function(value) {
             if(value >= 100000)
